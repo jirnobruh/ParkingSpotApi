@@ -85,9 +85,10 @@ public class ParkingSpotsController : ControllerBase
     }
 }
 
+/*
 [ApiController]
 [Route("api/v1/[controller]")]
-public class AuthController : ControllerBase
+public partial class AuthController : ControllerBase
 {
     public InMemoryRepository<ParkingSpot> Repository { get; }
 
@@ -95,4 +96,4 @@ public class AuthController : ControllerBase
     {
         Repository = repository;    
     }
-}
+}*/
