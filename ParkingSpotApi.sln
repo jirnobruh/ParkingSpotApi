@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingSpotApi", "ParkingSpotApi\ParkingSpotApi.csproj", "{8ECEBED4-E067-4DBF-BCA3-5416EB1CA27B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8ECEBED4-E067-4DBF-BCA3-5416EB1CA27B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ECEBED4-E067-4DBF-BCA3-5416EB1CA27B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ECEBED4-E067-4DBF-BCA3-5416EB1CA27B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ECEBED4-E067-4DBF-BCA3-5416EB1CA27B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
