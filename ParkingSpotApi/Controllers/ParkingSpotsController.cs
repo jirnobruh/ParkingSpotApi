@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ParkingSpotApi.Interfaces;
 using ParkingSpotApi.Models;
 
 namespace ParkingSpotApi.Controllers;
@@ -7,9 +10,9 @@ namespace ParkingSpotApi.Controllers;
 [ApiController, Authorize, Route("api/v1/[controller]")]
 public class ParkingSpotsController : ControllerBase
 {
-    public InMemoryRepository<ParkingSpot> Repository { get; }
+    public IRepository<ParkingSpot> Repository { get; }
     
-    public ParkingSpotsController(InMemoryRepository<ParkingSpot> repository)
+    public ParkingSpotsController(IRepository<ParkingSpot> repository)
     {
         Repository = repository;    
     }
@@ -27,7 +30,7 @@ public class ParkingSpotsController : ControllerBase
     // Забронировать парковочное место (PATCH)
     // Доступ: только аутентифицированные пользователи
     [HttpPatch("{id}/reservation")]
-    public IActionResult Reserve(int id)
+    public async Task<IActionResult> Reserve(int id)
     {
         var spot = Repository.Find(id);
         
@@ -39,6 +42,25 @@ public class ParkingSpotsController : ControllerBase
         spot.ReservedUntil = DateTime.UtcNow.AddHours(2);
         
         Repository.Update(spot);
+        
+        // Формируем сообщение для уведомления.
+        var notifyPayload = new
+        {
+            EventId = spot.Id,
+            Title = $"Парковочное место {spot.Id} забронировано пользователем {User.Identity.Name}.",
+            EventDate = spot.ReservedUntil
+        };
+
+        // Отправляем уведомление через микросервис Telegram.
+        using (var httpClient = new HttpClient())
+        {
+            var json = JsonSerializer.Serialize(notifyPayload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = 
+                await httpClient.PostAsync("http://localhost:5229/api/notifications", content);
+        }
+
         
         return Ok(spot);
     }

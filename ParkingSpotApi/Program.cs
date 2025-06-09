@@ -13,13 +13,14 @@ public class Program
 
         builder.Services.AddControllers();
         
+        var jwtKey = "mysupersecretkeymysupersecretkey";
+        var jwtIssuer = "parkingapi";
+        
         // Регистрируем репозитории для пользователей и парковочных мест.
         builder.Services.AddSingleton<IRepository<User>, InMemoryRepository<User>>();
         builder.Services.AddSingleton<IRepository<ParkingSpot>, InMemoryRepository<ParkingSpot>>();
+        builder.Services.AddSingleton<ITokenService>(new TokenService(jwtKey, jwtIssuer));
         
-        var jwtKey = "mysupersecretkeymysupersecretkey";
-        var jwtIssuer = "parkingapi";
-
         builder.Services.AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
@@ -48,7 +49,11 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
-
+        
+        var userRepo = app.Services.GetRequiredService<IRepository<User>>();
+        var spotRepo = app.Services.GetRequiredService<IRepository<ParkingSpot>>();
+        AppSeeder.SeedAll(userRepo, spotRepo);
+        
         app.Run();
     }
 }
